@@ -224,7 +224,8 @@ def crearSprites():
     yoshiEnemigoPng = Image.open("Sprites/Rojo.png")
     yoshiBuenoPng = Image.open("Sprites/Azul.png")
 
-    gemaVerdePng = Image.open("Sprites/GemaVerde.png")
+    gemaVerdePng = Image.open("Sprites/pastoAzul.jpg")
+    gemaVerdePng = gemaVerdePng.resize((64, 64), Image.ANTIALIAS)
     gemaRojaPng = Image.open("Sprites/GemaRoja.png")
 
 
@@ -233,7 +234,12 @@ def crearSprites():
     coinGrande = coinPng.resize((64,64), Image.ANTIALIAS)
 
     sprites = []
-    imagenPasto = crearSprite(19,8)
+
+    imagen_p = Image.open("Sprites/pasto.jpg")
+    imagen_escala_p = imagen_p.resize((64, 64), Image.ANTIALIAS)
+    imagenPasto = ImageTk.PhotoImage(imagen_escala_p )
+
+    # imagenPasto = crearSprite(19,8)
     imagenPiedra = crearSprite(17,10)
     
     yoshiEnemigo = ImageTk.PhotoImage(yoshiEnemigoGrande)
