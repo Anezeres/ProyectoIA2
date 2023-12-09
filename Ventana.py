@@ -187,12 +187,10 @@ def dibujarSprites(imagen):
                 coin = lienzo.create_image(posX, posY, anchor=tk.NW, image=imagen[4])
                 lienzo.lift(coin)
                 agregarObjetoLista(fila,columna,coin)
-            # elif(mapa[fila][columna] == 5):
-            #     gema = lienzo.create_image(posX, posY, anchor=tk.NW, image=imagen[5])
-            #     lienzo.lift(gema)
-            #     agregarObjetoLista(fila,columna,gema)               
-
-    lienzo.create_line(50, 50, 150, 150, width=5, fill="black")
+            elif(mapa[fila][columna] == 7):
+                coinSuper = lienzo.create_image(posX, posY, anchor=tk.NW, image=imagen[7])
+                lienzo.lift(coinSuper)
+                agregarObjetoLista(fila,columna,coinSuper)               
 
 def dibujarCursor(fila, columna, imagen):
     global lienzo
@@ -230,6 +228,7 @@ def crearSprites():
     global sprites
 
     coinPng = Image.open("Sprites/Coin.png")
+    coinSuperPng = Image.open("Sprites/CoinSuper.png")
     yoshiEnemigoPng = Image.open("Sprites/Rojo.png")
     yoshiBuenoPng = Image.open("Sprites/Azul.png")
 
@@ -241,6 +240,7 @@ def crearSprites():
     yoshiBuenoGrande = yoshiBuenoPng.resize((64,64), Image.ADAPTIVE)
     yoshiEnemigoGrande = yoshiEnemigoPng.resize((64,64), Image.ADAPTIVE)
     coinGrande = coinPng.resize((64,64), Image.ADAPTIVE)
+    coinSuperGrande = coinSuperPng.resize((64,64), Image.ADAPTIVE)
 
     sprites = []
 
@@ -254,6 +254,7 @@ def crearSprites():
     yoshiEnemigo = ImageTk.PhotoImage(yoshiEnemigoGrande)
     yoshiBueno = ImageTk.PhotoImage(yoshiBuenoGrande)
     coin = ImageTk.PhotoImage(coinGrande)
+    coinSuper = ImageTk.PhotoImage(coinSuperGrande)
 
     gemaVerde = ImageTk.PhotoImage(gemaVerdePng)
     gemaRoja = ImageTk.PhotoImage(gemaRojaPng)
@@ -265,6 +266,7 @@ def crearSprites():
     sprites.append(coin)
     sprites.append(gemaVerde)
     sprites.append(gemaRoja)
+    sprites.append(coinSuper)
 
     return sprites 
 

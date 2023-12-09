@@ -15,5 +15,5 @@ with open(mapaTXT, "r") as archivo:
         mapa.append(lista_de_numeros)
 
     print("\n\nMAPA INICIAL\n")
-    #mostrarMapa(mapa)
+    mostrarMapa(mapa)
     generarVentana(mapa)
