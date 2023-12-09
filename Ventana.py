@@ -302,10 +302,10 @@ def moverYoshi(xNueva, yNueva,pos):
         print("GAME OVER")
     mapa = response["matriz"]    
     recorrido = response["recorrido"]  
+    # Variables que cuentan los puntos
     puntos_jugador = response["puntos_jugador"]
     puntos_maquina = response["puntos_maquina"]  
-    print("PUNTOS JUGADOR",puntos_jugador)
-    print("PUNTOS MAQUINA",puntos_maquina)
+    
 
     lienzo.lift(yoshiBueno)      
     lienzo.coords(yoshiBueno, xNueva, yNueva)
