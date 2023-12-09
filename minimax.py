@@ -3,20 +3,65 @@ import time
 from Reader import Reader
 
 
-def minimax(_matriz,pos,pos_ant,_recorrido,nivel):
+def minimax(_matriz,pos,pos_ant,_recorrido,nivel,puntos_maquina,puntos_jugador):
     tiempo_inicio = time.time()
+    moneda_uno = 4
+    moneda_dos = 7 
+    def encontrar_posicion(matriz, numero):
+        # Encuentra la posición actual del número en la matriz
+        for fila in range(len(matriz)):
+            for columna in range(len(matriz[fila])):
+                if matriz[fila][columna] == numero:
+                    return fila, columna
+        return None   
+
+
+
+    global _puntos_maquina
+    _puntos_maquina = 0
+    _puntos_maquina += puntos_maquina
     caballo_jugador = 3
     espacio_vacio = 0
+    monedas_uno = encontrar_posicion(_matriz,moneda_uno)
+    monedas_dos = encontrar_posicion(_matriz,moneda_uno)
+
+    if not monedas_uno:
+        
+        return  {
+            "matriz" :_matriz,
+            "recorrido": recorrido,
+            "puntos_jugador": puntos_jugador,
+            "puntos_maquina": _puntos_maquina,
+            "juego_terminado": True
+        }
+
+    
+
     x_fil,x_col = pos
+    if _matriz[x_fil][x_col] == 4:
+        puntos_jugador += 1
+       
     _matriz[x_fil][x_col] = caballo_jugador
 
     x_fil_ant,x_col_ant = pos_ant
     _matriz[x_fil_ant][x_col_ant] = espacio_vacio
     #Definicion de objetos del mapa
-    casilla_tomada = 1
-    
-    moneda_uno = 4
-    moneda_dos = 7   
+
+    if not monedas_uno:
+        
+        return  {
+            "matriz" :_matriz,
+            "recorrido": recorrido,
+            "puntos_jugador": puntos_jugador,
+            "puntos_maquina": _puntos_maquina,
+            "juego_terminado": True
+        }
+
+
+
+
+
+    casilla_tomada = 1   
     caballo_maquina = 2   
     
     puntos_moneda_uno = 1
@@ -46,13 +91,13 @@ def minimax(_matriz,pos,pos_ant,_recorrido,nivel):
     nodos.append(cola[0])
 
     
-    def encontrar_posicion(matriz, numero):
-        # Encuentra la posición actual del número en la matriz
-        for fila in range(len(matriz)):
-            for columna in range(len(matriz[fila])):
-                if matriz[fila][columna] == numero:
-                    return fila, columna
-        return None   
+    # def encontrar_posicion(matriz, numero):
+    #     # Encuentra la posición actual del número en la matriz
+    #     for fila in range(len(matriz)):
+    #         for columna in range(len(matriz[fila])):
+    #             if matriz[fila][columna] == numero:
+    #                 return fila, columna
+    #     return None   
 
     def sumatoria_beneficio(pocision, matriz):
         fila,columna = pocision
@@ -347,6 +392,7 @@ def minimax(_matriz,pos,pos_ant,_recorrido,nivel):
         profundidad = 0
         caballo_turno = caballo_maquina
         rama_min_max = "max"
+        global _puntos_maquina
         while True:        
             m = cola[0]        
             if (profundidad < m["profundidad"]):
@@ -516,7 +562,12 @@ def minimax(_matriz,pos,pos_ant,_recorrido,nivel):
                   
         fila_anterior, columna_anterior = nodos[0]["pocision_anterior"]
         fila_actual, columna_actual = nodos[0]["pocision_actual"]
-    
+
+        if _matriz[fila_actual][columna_actual] == moneda_uno:
+            _puntos_maquina += 1
+        if _matriz[fila_actual][columna_actual] == moneda_dos:
+            _puntos_maquina += 3   
+
         _matriz[fila_anterior][columna_anterior] = espacio_vacio
         _matriz[fila_actual][columna_actual] = caballo_maquina    
         
@@ -568,7 +619,10 @@ def minimax(_matriz,pos,pos_ant,_recorrido,nivel):
     comparar_matrices(matriz_original,_matriz)
     estado = {
         "matriz" :_matriz,
-        "recorrido": recorrido
+        "recorrido": recorrido,
+        "puntos_jugador": puntos_jugador,
+        "puntos_maquina": _puntos_maquina,
+        "juego_terminado": False
     }
    
     return estado

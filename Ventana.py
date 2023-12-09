@@ -18,6 +18,12 @@ global posYoshiBueno, posYoshiEnemigo
 global juegoIniciado
 global recorrido
 global nivel
+global puntos_jugador
+global puntos_maquina
+
+puntos_jugador = 0
+puntos_maquina = 0
+
 
 
 filaCursorActual=0
@@ -211,8 +217,7 @@ def dibujarCursor(fila, columna, imagen):
         #moverGema(posX, posY)
         #mapa[fila][columna] == 3
         #print(fila,columna)
-        moverYoshi(posX, posY,(fila,columna))
-        
+        moverYoshi(posX, posY,(fila,columna))        
         print("Se puede mover aquí")
 
     else:
@@ -291,13 +296,22 @@ def moverYoshi(xNueva, yNueva,pos):
     global posYoshiBueno
     global recorrido
     global nivel
-    print(nivel)   
-
-    print("KENNYBLELL",nivel)  
+    global puntos_maquina
+    global puntos_jugador
+  
+    print(puntos_jugador)
+    print(puntos_maquina)   
+    
+    
     imprimir_matriz(mapa)
-    response = minimax(mapa,pos,posYoshiBueno,recorrido,nivel)
+    # response = minimax(mapa,pos,posYoshiBueno,recorrido,nivel,puntos_jugador,puntos_maquina)    
+    response = minimax(mapa,pos,posYoshiBueno,recorrido,nivel,puntos_maquina,puntos_jugador)    
+    if response["juego_terminado"] :
+        print("GAME OVER")
     mapa = response["matriz"]    
-    recorrido = response["recorrido"]
+    recorrido = response["recorrido"]  
+    puntos_jugador = response["puntos_jugador"]
+    puntos_maquina = response["puntos_maquina"]   
     
 
     lienzo.lift(yoshiBueno)      
