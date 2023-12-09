@@ -25,41 +25,55 @@ def minimax(_matriz,pos,pos_ant,_recorrido,nivel,puntos_maquina,puntos_jugador):
     monedas_uno = encontrar_posicion(_matriz,moneda_uno)
     monedas_dos = encontrar_posicion(_matriz,moneda_uno)
 
-    if not monedas_uno:
-        
+    if not monedas_uno:        
         return  {
             "matriz" :_matriz,
-            "recorrido": recorrido,
+            "recorrido": [],
             "puntos_jugador": puntos_jugador,
             "puntos_maquina": _puntos_maquina,
             "juego_terminado": True
         }
-
+    elif not monedas_dos:
+        return  {
+            "matriz" :_matriz,
+            "recorrido": [],
+            "puntos_jugador": puntos_jugador,
+            "puntos_maquina": _puntos_maquina,
+            "juego_terminado": True
+        }
     
 
     x_fil,x_col = pos
     if _matriz[x_fil][x_col] == 4:
         puntos_jugador += 1
-       
+
+    if _matriz[x_fil][x_col] == 7:
+        puntos_jugador += 3    
+
     _matriz[x_fil][x_col] = caballo_jugador
 
     x_fil_ant,x_col_ant = pos_ant
     _matriz[x_fil_ant][x_col_ant] = espacio_vacio
     #Definicion de objetos del mapa
+    monedas_uno_j = encontrar_posicion(_matriz,moneda_uno)
+    monedas_dos_j = encontrar_posicion(_matriz,moneda_uno)
 
-    if not monedas_uno:
-        
+    if not monedas_uno_j:        
         return  {
             "matriz" :_matriz,
-            "recorrido": recorrido,
+            "recorrido": [],
             "puntos_jugador": puntos_jugador,
             "puntos_maquina": _puntos_maquina,
             "juego_terminado": True
         }
-
-
-
-
+    elif not monedas_dos_j:        
+        return  {
+            "matriz" :_matriz,
+            "recorrido": [],
+            "puntos_jugador": puntos_jugador,
+            "puntos_maquina": _puntos_maquina,
+            "juego_terminado": True
+        }
 
     casilla_tomada = 1   
     caballo_maquina = 2   
