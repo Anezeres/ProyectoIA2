@@ -2,7 +2,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import time
 from tkinter import filedialog
-
+from minimax import minimax
 
 global ventana
 global yoshiBueno
@@ -14,8 +14,10 @@ global listaObjetos
 global boton1, boton2, botonVolver
 global boton3, boton4, boton5, iniciarJuegoBtn
 
-global posYoshiBueno
+global posYoshiBueno, posYoshiEnemigo
 global juegoIniciado
+global recorrido
+global nivel
 
 
 filaCursorActual=0
@@ -23,6 +25,7 @@ columnaCursorActual = 0
 
 juegoIniciado = False
 listaObjetos = []
+recorrido = []
 
 def generarVentana(mapaRecibido):
     global lienzo
@@ -30,10 +33,11 @@ def generarVentana(mapaRecibido):
     global mapa
     global boton1, boton2, boton3, botonVolver
     global boton3, boton4, boton5, iniciarJuegoBtn
+    global recorrido
 
     #TODO Ahora hay que hacer que cuando le de click al boton el soldado empiece a moverse por el mapa
 
-    
+    #recorrido = []
     mapa = mapaRecibido
     ventana = tk.Tk()
     ventana.title("Mostrar Primer Sprite")
@@ -50,8 +54,9 @@ def generarVentana(mapaRecibido):
     lienzo.pack()
 
     ventanaIniciarJuego()
-    ventana.bind("<Motion>", imprimirCordenada)
+    #ventana.bind("<Motion>", imprimirCordenada)
     ventana.bind("<Button-1>", imprimirCordenada)
+    
     
     ventana.geometry("512x512")
     ventana.mainloop()
@@ -81,10 +86,10 @@ def seleccionarDificultad():
     boton3 = tk.Button(ventana, text="Seleccionar",width=19,height=1, command=lambda: generarMovimientosAmplitud())
     boton3.place(x=22, y=173)
 
-    boton4 = tk.Button(ventana, text="Seleccionar",width=19,height=1, command=lambda: mensaje("Intermedio"))
+    boton4 = tk.Button(ventana, text="Seleccionar",width=19,height=1, command=lambda: nivel_intermedio())
     boton4.place(x=22, y=270)
 
-    boton5 = tk.Button(ventana, text="Seleccionar",width=19,height=1, command=lambda: mensaje("Experto"))
+    boton5 = tk.Button(ventana, text="Seleccionar",width=19,height=1, command=lambda: nivel_avanzado())
     boton5.place(x=22, y=364)
 
     """ botonVolver = tk.Button(ventana, text="Volver",width=19,height=1, command=lambda: mostrarOpcionesIniciales())
@@ -137,7 +142,7 @@ def crearSprite(x,y):
     imagen_recortada = imagen.crop((x_inicio, y_inicio, x_inicio + ancho_recorte, y_inicio + alto_recorte))
 
     # Convertir la imagen recortada a PhotoImage para Tkinter
-    imagen_escala = imagen_recortada.resize((64, 64), Image.ANTIALIAS)
+    imagen_escala = imagen_recortada.resize((64, 64), Image.ADAPTIVE)
     imagen_tk = ImageTk.PhotoImage(imagen_escala)
 
     # Crear una etiqueta para mostrar la imagen
@@ -175,17 +180,17 @@ def dibujarSprites(imagen):
                 agregarObjetoLista(fila,columna,yoshiEnemigo)
             elif(mapa[fila][columna] == 3):
                 posYoshiBueno = (fila,columna)
-                print("Dibjado de Yoshi: ", posX,posY)
+               # print("Dibjado de Yoshi: ", posX,posY)
                 yoshiBueno = lienzo.create_image(posX, posY, anchor=tk.NW, image=imagen[3])
                 lienzo.lift(yoshiBueno)
             elif(mapa[fila][columna] == 4):
                 coin = lienzo.create_image(posX, posY, anchor=tk.NW, image=imagen[4])
                 lienzo.lift(coin)
                 agregarObjetoLista(fila,columna,coin)
-            elif(mapa[fila][columna] == 5):
-                gema = lienzo.create_image(posX, posY, anchor=tk.NW, image=imagen[5])
-                lienzo.lift(gema)
-                agregarObjetoLista(fila,columna,gema)
+            # elif(mapa[fila][columna] == 5):
+            #     gema = lienzo.create_image(posX, posY, anchor=tk.NW, image=imagen[5])
+            #     lienzo.lift(gema)
+            #     agregarObjetoLista(fila,columna,gema)               
 
     lienzo.create_line(50, 50, 150, 150, width=5, fill="black")
 
@@ -200,15 +205,19 @@ def dibujarCursor(fila, columna, imagen):
 
     posX = x + columna * sprite_size
     posY = y + fila * sprite_size
-    print("posiciones",posX, posY)
+    #print("posiciones",posX, posY)
     if(esMovimientoPosible((fila, columna))):
-        lienzo.itemconfig(gema, image=imagen[5])
-        moverGema(posX, posY)
+        #lienzo.itemconfig(gema, image=imagen[5])
+        #moverGema(posX, posY)
+        #mapa[fila][columna] == 3
+        #print(fila,columna)
+        moverYoshi(posX, posY,(fila,columna))
+        
         print("Se puede mover aquí")
 
     else:
-        lienzo.itemconfig(gema, image=imagen[6])
-        moverGema(posX, posY)
+        #lienzo.itemconfig(gema, image=imagen[6])
+        #moverGema(posX, posY)
         print("No se puede mover aquí")
 
 
@@ -225,18 +234,18 @@ def crearSprites():
     yoshiBuenoPng = Image.open("Sprites/Azul.png")
 
     gemaVerdePng = Image.open("Sprites/pastoAzul.jpg")
-    gemaVerdePng = gemaVerdePng.resize((64, 64), Image.ANTIALIAS)
+    gemaVerdePng = gemaVerdePng.resize((64, 64), Image.ADAPTIVE)
     gemaRojaPng = Image.open("Sprites/GemaRoja.png")
 
 
-    yoshiBuenoGrande = yoshiBuenoPng.resize((64,64), Image.ANTIALIAS)
-    yoshiEnemigoGrande = yoshiEnemigoPng.resize((64,64), Image.ANTIALIAS)
-    coinGrande = coinPng.resize((64,64), Image.ANTIALIAS)
+    yoshiBuenoGrande = yoshiBuenoPng.resize((64,64), Image.ADAPTIVE)
+    yoshiEnemigoGrande = yoshiEnemigoPng.resize((64,64), Image.ADAPTIVE)
+    coinGrande = coinPng.resize((64,64), Image.ADAPTIVE)
 
     sprites = []
 
     imagen_p = Image.open("Sprites/pasto.jpg")
-    imagen_escala_p = imagen_p.resize((64, 64), Image.ANTIALIAS)
+    imagen_escala_p = imagen_p.resize((64, 64), Image.ADAPTIVE)
     imagenPasto = ImageTk.PhotoImage(imagen_escala_p )
 
     # imagenPasto = crearSprite(19,8)
@@ -273,7 +282,34 @@ def moverGema(xNueva, yNueva):
 
     return 0
 
+def moverYoshi(xNueva, yNueva,pos):
+    global lienzo
+    global gema
+    global yoshiBueno
+    global ventana
+    global mapa
+    global posYoshiBueno
+    global recorrido
+    global nivel
+    print(nivel)   
+
+    print("KENNYBLELL",nivel)  
+    imprimir_matriz(mapa)
+    response = minimax(mapa,pos,posYoshiBueno,recorrido,nivel)
+    mapa = response["matriz"]    
+    recorrido = response["recorrido"]
     
+
+    lienzo.lift(yoshiBueno)      
+    lienzo.coords(yoshiBueno, xNueva, yNueva)
+    lista_sprites = crearSprites()
+    dibujarSprites(lista_sprites)    
+    ventana.update()
+
+    return 0
+def imprimir_matriz(matriz):
+        for fila in matriz:
+            print(" ".join(map(str, fila)))    
 def identificarMovimientosCompletos():
     global listaMovimientos
 
@@ -294,7 +330,7 @@ def identificarMovimientosCompletos():
                 direccion = "Izquierda"
 
             
-            moverSoldado(0, direccion)
+            #moverSoldado(0, direccion)
             eliminarObjeto(fila_actual, columna_actual)
             time.sleep(1)
 
@@ -302,6 +338,8 @@ def generarMovimientosAmplitud():
     global listaMovimientos
     global lienzo
     global juegoIniciado
+    global nivel
+    nivel = 2
 
 
     juegoIniciado = True
@@ -317,6 +355,36 @@ def generarMovimientosAmplitud():
     identificarMovimientosCompletos()
     ventanaIniciarJuego() """
 
+
+def nivel_intermedio():
+    global listaMovimientos
+    global lienzo
+    global juegoIniciado
+    global nivel
+    nivel = 4
+
+
+    juegoIniciado = True
+    destruirBotones()
+    sprites = crearSprites()
+    dibujarSprites(sprites)
+
+    variables = input("Pido el Input: \n")
+
+def nivel_avanzado():
+    global listaMovimientos
+    global lienzo
+    global juegoIniciado
+    global nivel
+    nivel = 6
+
+
+    juegoIniciado = True
+    destruirBotones()
+    sprites = crearSprites()
+    dibujarSprites(sprites)
+
+    variables = input("Pido el Input: \n")
 
 def eliminarObjeto(fila, columna):
     global listaObjetos
@@ -341,10 +409,10 @@ def mostrarOpcionesNoInformada():
     boton3 = tk.Button(ventana, text="Seleccionar",width=19,height=1, command=lambda: generarMovimientosAmplitud())
     boton3.place(x=47, y=160)
 
-    boton4 = tk.Button(ventana, text="Seleccionar",width=19,height=1, command=lambda: mensaje("Costo Uniforme"))
+    boton4 = tk.Button(ventana, text="Seleccionar",width=19,height=1, command=lambda: nivel_intermedio())
     boton4.place(x=47, y=327)
 
-    boton5 = tk.Button(ventana, text="Seleccionar",width=19,height=1, command=lambda: mensaje("Profundidad"))
+    boton5 = tk.Button(ventana, text="Seleccionar",width=19,height=1, command=lambda:nivel_avanzado())
     boton5.place(x=47, y=497)
 
     botonVolver = tk.Button(ventana, text="Volver",width=19,height=1, command=lambda: mostrarOpcionesIniciales())
@@ -420,15 +488,24 @@ def imprimirCordenada(event):
 
 def esMovimientoPosible(posCursos):
     global posYoshiBueno
+    global mapa
     print("Cordenada: ", posCursos)
     # Definir todos los posibles movimientos en L
     movimientosEnL = [(1, 2), (2, 1), (-1, 2), (-2, 1), (1, -2), (2, -1), (-1, -2), (-2, -1)]
-
+    
+    print("POSSS CURSORR")
+    fil_cur,col_cur = posCursos
+    if mapa[fil_cur][col_cur] == 1:
+        return False
+    if mapa[fil_cur][col_cur] == 2:
+        return False
+    #print(mapa[fil_cur][col_cur])
     # Verificar si la posición de verificación está en un movimiento en L
     for movimiento in movimientosEnL:
         nueva_pos = (posYoshiBueno[0] + movimiento[0], posYoshiBueno[1] + movimiento[1])
         if nueva_pos == posCursos:
             return True
-
+        
+    
     # Si no se encuentra ninguna coincidencia, no es un movimiento en L válido
     return False
