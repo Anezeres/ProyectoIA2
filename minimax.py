@@ -23,9 +23,9 @@ def minimax(_matriz,pos,pos_ant,_recorrido,nivel,puntos_maquina,puntos_jugador):
     caballo_jugador = 3
     espacio_vacio = 0
     monedas_uno = encontrar_posicion(_matriz,moneda_uno)
-    monedas_dos = encontrar_posicion(_matriz,moneda_uno)
+    monedas_dos = encontrar_posicion(_matriz,moneda_dos)
 
-    if not monedas_uno:        
+    if not monedas_uno and not monedas_dos:        
         return  {
             "matriz" :_matriz,
             "recorrido": [],
@@ -33,14 +33,7 @@ def minimax(_matriz,pos,pos_ant,_recorrido,nivel,puntos_maquina,puntos_jugador):
             "puntos_maquina": _puntos_maquina,
             "juego_terminado": True
         }
-    elif not monedas_dos:
-        return  {
-            "matriz" :_matriz,
-            "recorrido": [],
-            "puntos_jugador": puntos_jugador,
-            "puntos_maquina": _puntos_maquina,
-            "juego_terminado": True
-        }
+    
     
 
     x_fil,x_col = pos
@@ -56,17 +49,9 @@ def minimax(_matriz,pos,pos_ant,_recorrido,nivel,puntos_maquina,puntos_jugador):
     _matriz[x_fil_ant][x_col_ant] = espacio_vacio
     #Definicion de objetos del mapa
     monedas_uno_j = encontrar_posicion(_matriz,moneda_uno)
-    monedas_dos_j = encontrar_posicion(_matriz,moneda_uno)
+    monedas_dos_j = encontrar_posicion(_matriz,moneda_dos)
 
-    if not monedas_uno_j:        
-        return  {
-            "matriz" :_matriz,
-            "recorrido": [],
-            "puntos_jugador": puntos_jugador,
-            "puntos_maquina": _puntos_maquina,
-            "juego_terminado": True
-        }
-    elif not monedas_dos_j:        
+    if not monedas_uno_j and not monedas_dos_j:        
         return  {
             "matriz" :_matriz,
             "recorrido": [],
@@ -604,7 +589,7 @@ def minimax(_matriz,pos,pos_ant,_recorrido,nivel,puntos_maquina,puntos_jugador):
     def comparar_matrices(matriz_modelo, segunda_matriz):
         for i in range(len(matriz_modelo)):
             for j in range(len(matriz_modelo[0])):
-                if matriz_modelo[i][j] in [4] and segunda_matriz[i][j] == 0:
+                if matriz_modelo[i][j] in [4,7] and segunda_matriz[i][j] == 0:
                     segunda_matriz[i][j] = 1            
     mover_caballo() 
     comparar_matrices(matriz_original,_matriz)
