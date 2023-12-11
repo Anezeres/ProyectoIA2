@@ -348,10 +348,10 @@ def moverYoshi(xNueva, yNueva,pos):
             label_jugador_2.config(text="")   
         elif puntos_jugador < puntos_maquina:
             label_jugador.config(text="" )
-            label_jugador_2.config(text="LA MAQUINA HA GANADO" + str(puntos_maquina) + " - "+ str(puntos_jugador))  
+            label_jugador_2.config(text="LA MAQUINA HA GANADO: " + str(puntos_maquina) + " - "+ str(puntos_jugador))  
         elif   puntos_jugador == puntos_maquina :
-            label_jugador.config(text="HA SIDO " )
-            label_jugador_2.config(text="EMPATE" + str(puntos_jugador) + " - "+ str(puntos_maquina)) 
+            label_jugador.config(text="EMPATE " )
+            label_jugador_2.config(text="EMPATE: " + str(puntos_jugador) + " - "+ str(puntos_maquina)) 
     elif not response["juego_terminado"] :            
         label_jugador.config(text="Puntos Jugador: " + str(puntos_jugador))
         label_jugador_2.config(text="Puntos Máquina: " + str(puntos_maquina))

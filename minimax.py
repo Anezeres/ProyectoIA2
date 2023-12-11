@@ -616,6 +616,17 @@ def minimax(_matriz,pos,pos_ant,_recorrido,nivel,puntos_maquina,puntos_jugador):
     #     nodos.append(cola[0])         
     #     print(estado_jugador)
     comparar_matrices(matriz_original,_matriz)
+    monedas_uno = encontrar_posicion(_matriz,moneda_uno)
+    monedas_dos = encontrar_posicion(_matriz,moneda_dos)
+
+    if not monedas_uno and not monedas_dos:        
+        return  {
+            "matriz" :_matriz,
+            "recorrido": [],
+            "puntos_jugador": puntos_jugador,
+            "puntos_maquina": _puntos_maquina,
+            "juego_terminado": True
+        }
     estado = {
         "matriz" :_matriz,
         "recorrido": recorrido,
