@@ -344,7 +344,7 @@ def moverYoshi(xNueva, yNueva,pos):
     dibujarSprites(lista_sprites)    
     if response["juego_terminado"] :
         if puntos_jugador > puntos_maquina:
-            label_jugador.config(text="EL JUGADOR HA GANADO. " + str(puntos_jugador) + " - "+ str(puntos_maquina))
+            label_jugador.config(text="EL JUGADOR HA GANADO: " + str(puntos_jugador) + " - "+ str(puntos_maquina))
             label_jugador_2.config(text="")   
         elif puntos_jugador < puntos_maquina:
             label_jugador.config(text="" )
