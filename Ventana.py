@@ -20,6 +20,8 @@ global recorrido
 global nivel
 global puntos_jugador
 global puntos_maquina
+global label_jugador
+global label_jugador_2
 
 puntos_jugador = 0
 puntos_maquina = 0
@@ -40,6 +42,10 @@ def generarVentana(mapaRecibido):
     global boton1, boton2, boton3, botonVolver
     global boton3, boton4, boton5, iniciarJuegoBtn
     global recorrido
+    global puntos_jugador
+    global puntos_maquina
+    global label_jugador
+    global label_jugador_2
 
     #TODO Ahora hay que hacer que cuando le de click al boton el soldado empiece a moverse por el mapa
 
@@ -54,17 +60,34 @@ def generarVentana(mapaRecibido):
     boton4 = tk.Button(ventana, text="Volver",width=19,height=1, command=lambda: mensaje("boton4"))
     boton5 = tk.Button(ventana, text="Volver",width=19,height=1, command=lambda: mensaje("boton5"))
     iniciarJuegoBtn = tk.Button(ventana, text="Volver",width=19,height=1, command=lambda: mensaje("iniciarJuegoBtn"))
+    
 
+    frame_labels = tk.Frame(ventana)
+    #frame_labels.pack()
+    frame_labels.pack(side=tk.BOTTOM, pady=10)
 
-    lienzo = tk.Canvas(ventana, width=640, height=640)
+    # Creamos los labels para Jugador 1 y Jugador 2 dentro del contenedor
+    label_jugador = tk.Label(frame_labels, text="Puntos Jugador: " + str(puntos_jugador), fg="blue")
+    label_jugador.pack(side=tk.LEFT, padx=10)  # Alineamos a la izquierda con un pequeño espacio a la derecha
+
+    label_jugador_2 = tk.Label(frame_labels, text="Puntos Máquina: "+ str(puntos_maquina), fg="red")
+    label_jugador_2.pack(side=tk.LEFT, padx=10)
+
+    
+
+    lienzo = tk.Canvas(ventana, width=640, height=510)
+    
     lienzo.pack()
+    #lienzo.lift(frame_labels)
+
+    
 
     ventanaIniciarJuego()
     #ventana.bind("<Motion>", imprimirCordenada)
     ventana.bind("<Button-1>", imprimirCordenada)
     
     
-    ventana.geometry("512x512")
+    ventana.geometry("512x550")
     ventana.mainloop()
 
 
@@ -160,13 +183,14 @@ def dibujarSprites(imagen):
     global mapa
     global posYoshiBueno
     global gema
+    global puntos_jugador
 
     x = 0
     y = 0
     filas = 8
     columnas = 8
     sprite_size = 64
-
+    
     
     
 
@@ -196,7 +220,8 @@ def dibujarSprites(imagen):
             elif(mapa[fila][columna] == 7):
                 coinSuper = lienzo.create_image(posX, posY, anchor=tk.NW, image=imagen[7])
                 lienzo.lift(coinSuper)
-                agregarObjetoLista(fila,columna,coinSuper)               
+                agregarObjetoLista(fila,columna,coinSuper)           
+                 
 
 def dibujarCursor(fila, columna, imagen):
     global lienzo
@@ -276,6 +301,7 @@ def moverGema(xNueva, yNueva):
     global gema
     global yoshiBueno
     global ventana
+    global label_jugador
     
     lienzo.lift(gema)
 
@@ -296,6 +322,8 @@ def moverYoshi(xNueva, yNueva,pos):
     global nivel
     global puntos_maquina
     global puntos_jugador
+    global label_jugador
+    global label_jugador_2
     
     
     imprimir_matriz(mapa)   
@@ -307,12 +335,26 @@ def moverYoshi(xNueva, yNueva,pos):
     # Variables que cuentan los puntos
     puntos_jugador = response["puntos_jugador"]
     puntos_maquina = response["puntos_maquina"]  
-    
+    print("PUNTOS JUGADOR", puntos_jugador)
+    print("PUNTOS MAQUINA", puntos_maquina)
 
     lienzo.lift(yoshiBueno)      
     lienzo.coords(yoshiBueno, xNueva, yNueva)
     lista_sprites = crearSprites()
     dibujarSprites(lista_sprites)    
+    if response["juego_terminado"] :
+        if puntos_jugador > puntos_maquina:
+            label_jugador.config(text="EL JUGADOR HA GANADO. " + str(puntos_jugador) + " - "+ str(puntos_maquina))
+            label_jugador_2.config(text="")   
+        elif puntos_jugador < puntos_maquina:
+            label_jugador.config(text="" )
+            label_jugador_2.config(text="LA MAQUINA HA GANADO" + str(puntos_maquina) + " - "+ str(puntos_jugador))  
+        elif   puntos_jugador == puntos_maquina :
+            label_jugador.config(text="HA SIDO " )
+            label_jugador_2.config(text="EMPATE" + str(puntos_jugador) + " - "+ str(puntos_maquina)) 
+    elif not response["juego_terminado"] :            
+        label_jugador.config(text="Puntos Jugador: " + str(puntos_jugador))
+        label_jugador_2.config(text="Puntos Máquina: " + str(puntos_maquina))
     ventana.update()
 
     return 0
