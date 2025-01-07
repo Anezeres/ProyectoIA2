@@ -1,4 +1,4 @@
-#Yoshi’s battle 
+# Yoshi’s battle 
 es un juego entre dos adversarios en el que cada uno controla un Yoshi que
 tiene los mismos movimientos de un caballo en el ajedrez. En las casillas del centro hay cuatro
 monedas especiales, cada una otorga tres puntos a quien las tome primero. Las casillas cercanas
@@ -16,12 +16,12 @@ imperfectas. La profundidad límite del árbol depende del nivel seleccionado po
 el nivel principiante se utiliza un árbol de profundidad 2, para intermedio de profundidad 4, y
 para experto de profundidad 6.
 ## Aclaraciones generales:
-• El juego siempre lo inicia la máquina quien jugará con el Yoshi verde.
-• Al empezar el juego, las monedas normales y especiales siempre aparecen en las posiciones
+- El juego siempre lo inicia la máquina quien jugará con el Yoshi verde.
+- Al empezar el juego, las monedas normales y especiales siempre aparecen en las posiciones
 que se indican en la figura.
-• Las posiciones iniciales de los Yoshis son aleatorias y no pueden coincidir con la ubicación de
+- Las posiciones iniciales de los Yoshis son aleatorias y no pueden coincidir con la ubicación de
 las monedas.
-• Se debe mostrar en cada momento del juego la cantidad de puntos de cada jugador.
-• Al finalizar el juego se debe indicar quién es el ganador o si hubo empate.
+- Se debe mostrar en cada momento del juego la cantidad de puntos de cada jugador.
+- Al finalizar el juego se debe indicar quién es el ganador o si hubo empate.
 Debe presentar un informe donde se defina y explique la función de utilidad heurística que se
 utiliza en el algoritmo minimax.
