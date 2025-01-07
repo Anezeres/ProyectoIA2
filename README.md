@@ -1,5 +1,5 @@
 # Yoshi’s battle 
-es un juego entre dos adversarios en el que cada uno controla un Yoshi que
+Es un juego entre dos adversarios en el que cada uno controla un Yoshi que
 tiene los mismos movimientos de un caballo en el ajedrez. En las casillas del centro hay cuatro
 monedas especiales, cada una otorga tres puntos a quien las tome primero. Las casillas cercanas
 a las esquinas tienen monedas normales, cada una equivale a un punto. Después de que un Yoshi
